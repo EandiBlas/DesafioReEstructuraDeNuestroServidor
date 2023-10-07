@@ -14,12 +14,7 @@ router.post('/register', lc.createUser )
 
 router.post('/login', lc.loginUser)
 
-router.get('/logout', (req, res) => {
-    req.session.destroy(err => {
-        if (err) return res.status(500).send({ status: "error", error: "No pudo cerrar sesion" })
-        res.redirect('/login');
-    })
-})
+router.get('/logout', lc.LogoutUser)
 
 router.get(
     "/githubSignup",

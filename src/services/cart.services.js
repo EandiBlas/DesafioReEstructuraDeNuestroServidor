@@ -45,7 +45,6 @@ class CartService {
     return await this.cart.addCart(cartData)
   };
 
-
   getCart = async (id) => {
     const cart = await this.cart.getCartById(id);
     return cart;
@@ -55,7 +54,6 @@ class CartService {
     const carts = await this.cart.getCarts();
     return carts;
   };
-
 
   updateProductQuantityInCart = async (cid, pid, quantity) => {
     const cart = await this.cart.getCartById(cid);
@@ -79,23 +77,23 @@ class CartService {
   updateProductList = async (cid, pid, quantity) => {
     console.log(pid)
     try {
-        const cart = await this.cart.getCartById(cid);
+      const cart = await this.cart.getCartById(cid);
 
-        const productIndex = cart.products.findIndex((product) => product._id == pid);
+      const productIndex = cart.products.findIndex((product) => product._id == pid);
 
-        if (productIndex > -1) {
-            if (quantity > 0) {
-                cart.products[productIndex].quantity = quantity;
-            } else {
-                cart.products.splice(productIndex, 1);
-            }
-        } else if (quantity > 0) {
-            cart.products.push({ _id: pid, quantity });
+      if (productIndex > -1) {
+        if (quantity > 0) {
+          cart.products[productIndex].quantity = quantity;
+        } else {
+          cart.products.splice(productIndex, 1);
         }
+      } else if (quantity > 0) {
+        cart.products.push({ _id: pid, quantity });
+      }
 
-        return await cart.save();
+      return await cart.save();
     } catch (error) {
-        throw error;
+      throw error;
     }
   };
 

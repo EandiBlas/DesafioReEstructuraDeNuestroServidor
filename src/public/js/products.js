@@ -3,8 +3,7 @@ let cartId = 0;
 fetch('http://localhost:8080/api/products')
   .then((response) => response.json())
   .then((data) => {
-    console.log(data)
-    updateProductList(data.docs);
+    updateProductList(data.payload);
   })
 // socketClient.on('enviodeproducts', (obj) => {
 //   updateProductList(obj);

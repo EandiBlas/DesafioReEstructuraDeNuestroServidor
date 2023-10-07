@@ -27,6 +27,18 @@ class LoginController {
         }
     }
 
+    LogoutUser = async (req, res) => {
+        try {
+          req.session.destroy(err => {
+            if (err) return res.status(500).send({ status: "error", error: "No pudo cerrar sesion" })
+            res.redirect('/login');
+          })
+        } catch (error) {
+          console.log(error);
+          res.status(400).json({ message: error.message });
+        }
+     }
+
 }
 
 export default LoginController
