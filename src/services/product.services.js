@@ -23,10 +23,26 @@ class ProductService {
         return newProduct;
     }
 
-    getAllProducts = async () => {
-        const products = await this.product.getProducts();
-        return products;
-    };
+    getProducts = async (params) => {
+        const options = {
+          page: Number(params.query.page) || 1,
+          limit: Number(params.query.limit) || 10,
+          sort: { price: Number(params.query.sort) }
+        };
+      
+        if (!(options.sort.price === -1 || options.sort.price === 1)) {
+          delete options.sort
+        }
+      
+        const categories = await this.product.categories()
+        const result = categories.some(categ => categ === params.category)
+        
+        if (result) {
+          return await this.product.getProducts({ category: params.category }, options);
+        }
+      
+        return await this.product.getProducts({}, options);
+    }
 
     updateProduct = async (id, product) => {
         const updateProduct = await this.product.updateProduct(id, product);

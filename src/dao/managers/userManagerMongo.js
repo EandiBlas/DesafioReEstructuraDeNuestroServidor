@@ -1,6 +1,6 @@
 import { usersModel } from '../models/users.model.js';
 
-class UsersManager {
+export default class UsersManager {
 
     async createUser(user) {
         try {
@@ -31,5 +31,3 @@ class UsersManager {
     }
 
 }
-
-export const usersManager = new UsersManager()

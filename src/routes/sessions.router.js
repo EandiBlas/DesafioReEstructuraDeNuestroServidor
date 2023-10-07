@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { usersManager } from "../dao/managers/UserManagerMongo.js";
+import UsersManager from "../dao/managers/UserManagerMongo.js";
 import {privateAcces} from '../middlewares/middlewares.js'
-
+const um = new UsersManager()
 const router = Router()
 
 router.get('/current', privateAcces, async (req, res) => {
-    const user = await usersManager.findUser(req.session.username)
+    const user = await um.findUser(req.session.username)
     const newUser = {
       first_name: user.first_name,
       last_name: user.last_name,

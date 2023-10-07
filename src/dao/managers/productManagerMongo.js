@@ -35,7 +35,6 @@ export default class ProductManager {
 
     getProducts = async (filter, options) => {
         try {
-            //  return await productsModel.find().lean();
             return await productsModel.paginate(filter, options);
         } catch (err) {
             return err

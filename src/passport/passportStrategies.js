@@ -1,7 +1,7 @@
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as GithubStrategy } from 'passport-github2';
-import { usersManager } from '../dao/managers/UserManagerMongo.js';
+import UsersManager from '../dao/managers/UserManagerMongo.js';
 import { compareData } from '../utils.js';
 
 import config from '../config.js'
@@ -9,7 +9,7 @@ import config from '../config.js'
 passport.use('login', new LocalStrategy(
     async function (username, password, done) {
         try {
-            const userDB = await usersManager.findUser(username)
+            const userDB = await UsersManager.findUser(username)
             if (!userDB) {
                 return done(null, false)
             }
@@ -31,7 +31,7 @@ passport.use(new GithubStrategy({
   },
   async function(accessToken, refreshToken, profile, done) {
     try {
-        const userDB = await usersManager.findUser(profile.username)
+        const userDB = await UsersManager.findUser(profile.username)
         if(userDB){
             if(userDB.fromGithub){
                 return done(null,userDB)
@@ -47,7 +47,7 @@ passport.use(new GithubStrategy({
             email: profile.emails[0].value,
             fromGithub: true
         }
-        const result = await usersManager.createUser(newUser)
+        const result = await UsersManager.createUser(newUser)
         return done(null,result)
     } catch (error) {
         done(error)
@@ -64,7 +64,7 @@ passport.serializeUser((usuario, done) => {
 
 passport.deserializeUser(async (id, done) => {
     try {
-        const user = await usersManager.findUserById(id)
+        const user = await UsersManager.findUserById(id)
         done(null, user)
 
     } catch (error) {

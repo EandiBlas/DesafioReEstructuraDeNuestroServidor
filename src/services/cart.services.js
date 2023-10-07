@@ -9,6 +9,27 @@ class CartService {
     this.product = new ProductManager();
   }
 
+  addProductToCart = async (cid, pid, quantity) => {
+    try {
+      const cart = await this.cart.getCartById(cid);
+      if (!cart) {
+        throw new Error(`Cart with ID: ${cid} not found`);
+      }
+
+      const productIndex = cart.products.findIndex((product) => product._id.toString() === pid);
+
+      if (productIndex > -1) {
+        cart.products[productIndex].quantity += quantity;
+      } else {
+        cart.products.push({ _id: pid, quantity });
+      }
+
+      return await this.cart.updateProductsInCart(cid, cart.products);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   createCart = async (products) => {
     let cartData = {};
     const validProducts = [];
@@ -24,6 +45,7 @@ class CartService {
     return await this.cart.addCart(cartData)
   };
 
+
   getCart = async (id) => {
     const cart = await this.cart.getCartById(id);
     return cart;
@@ -33,6 +55,7 @@ class CartService {
     const carts = await this.cart.getCarts();
     return carts;
   };
+
 
   updateProductQuantityInCart = async (cid, pid, quantity) => {
     const cart = await this.cart.getCartById(cid);
@@ -52,11 +75,13 @@ class CartService {
     return updatedCart;
   };
 
+
   updateProductList = async (cid, pid, quantity) => {
+    console.log(pid)
     try {
         const cart = await this.cart.getCartById(cid);
 
-        const productIndex = cart.products.findIndex((product) => product._id === pid);
+        const productIndex = cart.products.findIndex((product) => product._id == pid);
 
         if (productIndex > -1) {
             if (quantity > 0) {
@@ -73,6 +98,41 @@ class CartService {
         throw error;
     }
   };
+
+
+  deleteProductInCart = async (cid, pid) => {
+    try {
+      const cart = await this.cart.getCartById(cid);
+      const productIndex = cart.products.findIndex((product) => product._id.toString() === pid);
+      if (productIndex === -1) {
+        throw new Error(`Product with ID: ${pid} not found in cart`);
+      }
+
+      cart.products.splice(productIndex, 1);
+      return await this.cart.updateCart(cid, cart.products);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
+  emptyCart = async (cid) => {
+    try {
+      const cart = await this.cart.getCartById(cid);
+      if (!cart) {
+        throw new Error(`Cart with ID: ${cid} not found`);
+      }
+
+      if (cart.products.length === 0) {
+        throw new Error('The cart is already empty');
+      }
+
+      cart.products = [];
+      return await this.cart.updateCart(cid, cart.products);
+    } catch (error) {
+      throw error;
+    }
+  }
 
 
 }

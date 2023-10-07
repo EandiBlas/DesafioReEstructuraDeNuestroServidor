@@ -1,9 +1,11 @@
 import { Router } from 'express';
 import ProductManager from "../dao/managers/productManagerMongo.js"
-import { usersManager } from '../dao/managers/UserManagerMongo.js';
+import UsersManager from '../dao/managers/UserManagerMongo.js';
 import {privateAcces,publicAcces} from '../middlewares/middlewares.js'
 
 const pm = new ProductManager()
+
+const um = new UsersManager()
 
 const router = Router()
 
@@ -37,7 +39,7 @@ router.get("/login", publicAcces, (req,res)=>{
 })
 
 router.get('/profile', privateAcces, async (req, res) => {
-    const user = await usersManager.findUser(req.session.username)
+    const user = await um.findUser(req.session.username)
     const newUser = {
       username: user.username,
       email: user.email,
